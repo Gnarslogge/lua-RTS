@@ -1,5 +1,5 @@
-require ('load')
+dofile ('load.lua')
 
-require ('update')
+dofile ('update.lua')
 
-require('draw')
+dofile('draw.lua')

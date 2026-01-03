@@ -23,7 +23,7 @@ function love.draw()
     function cam_draw()
 
         --draw background
-        love.graphics.setColor(1, 1, 1, 0.25)
+        love.graphics.setColor(0.23, 0.53, 0.72, 0.25)
         love.graphics.rectangle('fill', 0, 0, 1280, 960)
         love.graphics.setColor(1, 1, 1, 1)
 
@@ -77,9 +77,10 @@ function love.draw()
 
             --wall
             elseif draw_order[i].type == "wall" then
-            
+
                 for ii=1, #spr.wall do
-                    love.graphics.draw(spr.wall[ii], draw_order[i].grid_x * 32 + 16, (draw_order[i].grid_y*32+16)-((ii*3)-3), 0, 2, 2, 8, 8)
+                    love.graphics.draw(spr.wall[ii], draw_order[i].grid_x * 32 + 16,
+                                                     (draw_order[i].grid_y*32+16)-((ii*3)-3), 0, 2, 2, 8, 8)
                 end
             
             --drill
@@ -96,9 +97,17 @@ function love.draw()
 
                 --draw drill
                 for ii=1, #spr.drill do
-                    love.graphics.draw(spr.drill[ii], draw_order[i].grid_x * 32, (draw_order[i].grid_y*32) - ((ii*3)-3), 0, 2, 2, 16, 16)
-                    love.graphics.draw(spr.drill[ii], draw_order[i].grid_x * 32, (draw_order[i].grid_y*32) - ((ii*3)-2), 0, 2, 2, 16, 16)
-                    love.graphics.draw(spr.drill[ii], draw_order[i].grid_x * 32, (draw_order[i].grid_y*32) - ((ii*3)-1), 0, 2, 2, 16, 16)
+
+
+                    love.graphics.draw(spr.drill[ii], draw_order[i].grid_x * 32, 
+                                                      (draw_order[i].grid_y*32) - (ii*2) - 3, 
+                                                      0, 2, 2, 16, 16)
+                    love.graphics.draw(spr.drill[ii], draw_order[i].grid_x * 32, 
+                                                      (draw_order[i].grid_y*32) - (ii*2) - 2, 
+                                                      0, 2, 2, 16, 16)
+                    love.graphics.draw(spr.drill[ii], draw_order[i].grid_x * 32, 
+                                                      (draw_order[i].grid_y*32) - (ii*2) - 1, 
+                                                      0, 2, 2, 16, 16)
                 end
 
                 --reset color
@@ -207,17 +216,17 @@ function love.draw()
     for _y=1, #grid_map do
         for _x=1, #grid_map[_y] do
 
-            love.graphics.setColor(0, 0, 0, 1)
+            love.graphics.setColor(0, 0, 1, 1)
             if grid_map[_y][_x] == 1 then
 
                 love.graphics.setColor(0, 1, 0, 1)
             end
-            love.graphics.rectangle('fill', 32 + _x*2, 320 + _y*2, 2, 2)
+            love.graphics.rectangle('fill', gui.x + (_x-1)*2, gui.y + (_y-1)*2, 2, 2)
         end
     end
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setLineWidth(1)
-    love.graphics.rectangle('line', 32 + ((view_x-320)/16) + 1, 320 + ((view_y-240)/16) + 1, 40, 26)
+    love.graphics.rectangle('line', gui.x + ((view_x-(view_w/2))/16) + 1, gui.y + ((view_y-(view_h/2))/16) + 1, 38, 21)
 
     --mouse debug
     if (debug_display) then 

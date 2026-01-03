@@ -5,7 +5,7 @@ function love.update(dt)
     mouse.gui_y = love.mouse.getY()
 
     --test for gui mode
-    if mouse.gui_y < 64 then
+    if mouse.gui_y > 360 then
         mouse.on_gui = true
     else
         mouse.on_gui = false
@@ -63,55 +63,64 @@ function love.update(dt)
         draw_grid = not draw_grid
     end
 
-
-    --move camera with arrow keys
-    if love.keyboard.isDown('up') then
-        view_y = view_y - 8
-        if view_y < (480/2) then view_y = (480/2) end
-    end
-    if love.keyboard.isDown('down') then
-        view_y = view_y + 8
-        if view_y > (960 - (480/2)) then view_y = (960-(480/2)) end
-    end
-    if love.keyboard.isDown('left') then
-        view_x = view_x - 8
-        if view_x < (640/2) then view_x = (640/2) end
-    end
-    if love.keyboard.isDown('right') then
-        view_x = view_x + 8
-        if view_x > (1280 - (640/2)) then view_x = (1280 - (640/2)) end
-    end
-
-    cam:setPosition(view_x, view_y)
-
-    --update mouse coords
-    mouse.x = love.mouse.getX() + view_x - (640/2)
-    mouse.y = love.mouse.getY() + view_y - (view_w/2)
+    --CAMERA MOVEMENT
+    local _cam_moved_with_mouse = false
 
     --move camera if mouse is on edges
-    if mouse.x - view_x > (640/2 - 64) then 
+    if mouse.gui_x > (view_w - view_margin) then 
         view_x = view_x + 8 
-        if view_x > (1280 - (640/2)) then view_x = (1280 - (640/2)) end
+        if view_x > 1920-(view_w/2) then 
+            view_x = 1920-(view_w/2) 
+        end
+        _cam_moved_with_mouse = true
     end
-    if view_x - mouse.x > (640/2 - 64) then 
+    if mouse.gui_x < view_margin then 
         view_x = view_x - 8 
-        if view_x < (640/2 + 32) then view_x = (640/2 + 32) end
+        if view_x < (view_w/2) then 
+            view_x = (view_w/2) 
+        end
+        _cam_moved_with_mouse = true
     end
-    if mouse.y - view_y > (480/2 - 128) then
-        view_y = view_y + 8
-        if view_y > (960 - (480/2)) then view_y = (960 - (480/2)) end
-    end
-    if view_y - mouse.y > (480/2 - 64) 
+    if mouse.gui_y > (view_h - view_margin)
     and not mouse.on_gui then
+        view_y = view_y + 8
+        if view_y > 1920-(view_h/2) then 
+            view_y = 1920-(view_h/2) 
+        end
+        _cam_moved_with_mouse = true
+    end
+    if mouse.gui_y < view_margin then
         view_y = view_y - 8
-        if view_y < (480/2 + 32) then view_y = (480/2 + 32) end
+        if view_y < (view_h/2) then 
+            view_y = (view_h/2) 
+        end
+        _cam_moved_with_mouse = true
+    end
+
+    --move camera with arrow keys
+    if not _cam_moved_with_mouse then
+        if love.keyboard.isDown('up') then
+            view_y = view_y - 8
+            if view_y < (480/2) then view_y = (480/2) end
+        end
+        if love.keyboard.isDown('down') then
+            view_y = view_y + 8
+            if view_y > (960 - (480/2)) then view_y = (960-(480/2)) end
+        end
+        if love.keyboard.isDown('left') then
+            view_x = view_x - 8
+            if view_x < (640/2) then view_x = (640/2) end
+        end
+        if love.keyboard.isDown('right') then
+            view_x = view_x + 8
+            if view_x > (1280 - (640/2)) then view_x = (1280 - (640/2)) end
+        end
     end
 
     cam:setPosition(view_x, view_y)
 
     --update mouse coords
-    mouse.x = love.mouse.getX() + view_x - (640/2)
-    mouse.y = love.mouse.getY() + view_y - (view_w/2 - 48)
+    mouse.x, mouse.y = cam:toWorld(mouse.gui_x, mouse.gui_y)
 
     --determine mouse grid coords
     mouse.grid_x = math.floor(mouse.x/32) + 1
@@ -126,7 +135,7 @@ function love.update(dt)
     mouse.to_place.y = (mouse.grid_y+1) * 32
 
     --test for gui mode
-    if mouse.y - view_y < -240 then
+    if mouse.gui_y > 360 then
         mouse.on_gui = true
     else
         mouse.on_gui = false
@@ -470,10 +479,6 @@ function love.update(dt)
             end
 
         end
-    end
-
-    if love.keyboard.isDown('a') then
-        cam:setScale(2)
     end
 
     --toggle debug display

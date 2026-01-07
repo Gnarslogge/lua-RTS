@@ -141,7 +141,7 @@ function update_camera_movement()
     local ydiff = new_y - start_y
 
     -- 7️⃣ Set cursor (diagonal-aware)
-    local temp_cursor = cursor.default
+    -- temp_cursor = cursor.default
 
     -- Only consider intentional movement
     local move_x = (scroll_intent_x ~= 0 and xdiff ~= 0 and math.sign(xdiff) == scroll_intent_x) and scroll_intent_x or 0
@@ -166,5 +166,5 @@ function update_camera_movement()
         temp_cursor = move_y > 0 and cursor.down or cursor.up
     end
 
-    love.mouse.setCursor(temp_cursor)
+    --love.mouse.setCursor(temp_cursor)
 end

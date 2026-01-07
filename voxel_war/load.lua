@@ -36,7 +36,7 @@ function love.load()
     require ('spiral_search')
     require ('camera_movement')
 
-    --cursor
+    --[[cursor
     cursor = {
         default = love.mouse.newCursor('spr/cursor/cursor_default.png', 16, 16),
         up = love.mouse.newCursor('spr/cursor/cursor_up.png', 16, 16),
@@ -49,7 +49,7 @@ function love.load()
         downright = love.mouse.newCursor('spr/cursor/cursor_downright.png', 32, 32)
     }
     love.mouse.setCursor(cursor.default)
-    temp_cursor = cursor.default
+    temp_cursor = cursor.default ]]
 
     --setup camera
     cam = gamera.new(0, 0, 1920, 1920)
